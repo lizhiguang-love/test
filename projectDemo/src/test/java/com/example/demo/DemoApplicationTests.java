@@ -5,9 +5,9 @@ import com.example.demo.demos.pojo.UserTest;
 import com.example.thread.InsertTarget;
 import com.example.thread.InsertTargetRunnable;
 import com.google.common.collect.Lists;
-import com.sun.xml.internal.ws.util.CompletedFuture;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -19,13 +19,20 @@ class DemoApplicationTests {
     @Resource
     private UserTestMapper userTestMapper;
 
-    private CountDownLatch countDownLatch;
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+
     @Test
     void contextLoads() {
         List<UserTest> userTests = userTestMapper.selectList(null);
         System.out.println(userTests.get(0).toString());
     }
 
+    @Test
+    void redisTest(){
+        System.out.println(stringRedisTemplate.opsForValue().get("test"));
+    }
     @Test
     void testInsert(){
         ArrayList<UserTest> allUser = new ArrayList(5000);
