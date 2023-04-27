@@ -7,4 +7,5 @@
     <select id="selectUserTest" resultType="UserTest">
         select * from userTest
     </select>
+
 </mapper>

@@ -29,20 +29,23 @@ public class UserTestServiceImpl extends ServiceImpl<UserTestMapper,UserTest> im
     public void batchInsert(List<UserTest> userTestList) {
         //每个线程处理的数据量
         int downLanchSize=userTestList.size()%Integer.valueOf(corePoolSize)==0 ? Integer.valueOf(corePoolSize) : Integer.valueOf(corePoolSize)+1;
-        //控制多线程并发情景下其它线程误插入
-        CountDownLatch downLatch = new CountDownLatch(downLanchSize);
-        for (int i = 0; i < downLanchSize; i++) {
-            List<List<UserTest>> partition = Lists.partition(userTestList, userTestList.size() / Integer.valueOf(corePoolSize));
-            //为每一个线程分配任务
-            BatchInsertUserTestThread userTestThread = new BatchInsertUserTestThread(userTestMapper, downLatch, partition.get(i));
+        BatchInsertUserTestThread userTestThread=null;
+        //当数据量小于核心线程数时
+        if (userTestList.size()<Integer.valueOf(corePoolSize)){
+            userTestThread = new BatchInsertUserTestThread(userTestMapper,userTestList);
             FutureTask futureTask = new FutureTask(userTestThread);
             executor.execute(futureTask);
+        }else {
+            for (int i = 0; i < downLanchSize; i++) {
+                List<List<UserTest>> partition = Lists.partition(userTestList, userTestList.size() / Integer.valueOf(corePoolSize));
+                //为每一个线程分配任务
+                userTestThread = new BatchInsertUserTestThread(userTestMapper, partition.get(i));
+                FutureTask futureTask = new FutureTask(userTestThread);
+                executor.execute(futureTask);
+            }
+
         }
-        try {
-            downLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
     }
 }

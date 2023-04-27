@@ -25,12 +25,13 @@ public class InsertTarget implements Callable {
     public Integer call() throws Exception {
         for (UserTest userTest : userTestList) {
             userTestMapper.insert(userTest);
+            System.out.println(userTest);
             rows++;
         }
-
-        if (rows==userTestList.size()){
-            countDownLatch.countDown();
-        }
+        System.out.println("累计--->"+rows);
+//        if (rows==userTestList.size()){
+//            countDownLatch.countDown();
+//        }
         return rows;
     }
 }

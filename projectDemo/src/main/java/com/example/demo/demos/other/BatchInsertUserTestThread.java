@@ -9,23 +9,17 @@ import java.util.concurrent.CountDownLatch;
 
 public class BatchInsertUserTestThread implements Callable {
     private UserTestMapper userTestMapper;
-    private CountDownLatch countDownLatch;
     private List<UserTest> userTestList;
-    int rows;
-    public BatchInsertUserTestThread(UserTestMapper userTestMapper,CountDownLatch countDownLatch,List<UserTest> userTestList){
+    public BatchInsertUserTestThread(UserTestMapper userTestMapper,List<UserTest> userTestList){
         this.userTestMapper=userTestMapper;
-        this.countDownLatch=countDownLatch;
         this.userTestList=userTestList;
     }
     @Override
     public Object call() throws Exception {
         userTestList.forEach(userTest -> {
             userTestMapper.insert(userTest);
-            rows++;
         });
-        if (rows==userTestList.size()){
-            countDownLatch.countDown();
-        }
-        return rows;
+
+        return "success";
     }
 }

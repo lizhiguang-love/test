@@ -28,6 +28,9 @@ class DemoApplicationTests {
     @Resource
     private UserTestService userTestService;
 
+    @Resource
+    private Executor executor;
+
     @Value("${spring.task.execution.pool.core-size}")
     private String corePoolSize;
     @Test
@@ -45,7 +48,7 @@ class DemoApplicationTests {
     void testInsert(){
         ArrayList<UserTest> allUser = new ArrayList(5000);
         //生成size个UserInfo
-        for (int i = 0; i < 51; i++) {
+        for (int i = 0; i < 20; i++) {
             UserTest userInfo = new UserTest();
             userInfo.setName("test"+i);
             userInfo.setEmail("email"+i);
@@ -71,25 +74,24 @@ class DemoApplicationTests {
             userInfo.setAge(i);
             allUser.add(userInfo);
         }
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 1, TimeUnit.HOURS, new LinkedBlockingQueue());
 
         //每个线程处理的数据量
-        final Integer dataPartionLength=(allUser.size()+50-1)/50;
+//        final Integer dataPartionLength=(allUser.size()+50-1)/50;
 
         int downLanchSize=0;
         //将downLanchSize的值算出来
-        if (allUser.size()%dataPartionLength==0){
-            downLanchSize=allUser.size()/dataPartionLength;
+        if (allUser.size()%100==0){
+            downLanchSize=allUser.size()/100;
         }else {
-            downLanchSize=allUser.size()/dataPartionLength+1;
+            downLanchSize=allUser.size()/100+1;
         }
         CountDownLatch countDownLatch = new CountDownLatch(downLanchSize);
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < downLanchSize; i++) {
             //每个线程均分需要处理的数据
-            List<List<UserTest>> partition = Lists.partition(allUser, dataPartionLength);
+            List<List<UserTest>> partition = Lists.partition(allUser, 100);
             //调用实现了Callable的InsertTarget类，将countDownLatch,partion传进去
-            InsertTarget insertTarget = new InsertTarget(partition.get(i), countDownLatch,userTestMapper);
+            InsertTarget insertTarget = new InsertTarget(partition.get(i),countDownLatch,userTestMapper);
 
             FutureTask futureTask = new FutureTask(insertTarget);
             //执行任务
@@ -97,14 +99,15 @@ class DemoApplicationTests {
         }
 
 
-        try {
-            //保证每个线程完成后再完成计时
-            countDownLatch.await();
-            long endTime = System.currentTimeMillis();
-            System.out.println("线程数为{}的线程池插入5000用时--->"+(endTime - startTime));
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+//        try {
+//            //保证每个线程完成后再完成计时
+//            countDownLatch.await();
+//            long endTime = System.currentTimeMillis();
+//            System.out.println("线程数为{}的线程池插入5000用时--->"+(endTime - startTime));
+//
+//        }catch (InterruptedException e){
+//            e.printStackTrace();
+//        }
 
     }
     @Test
