@@ -2,10 +2,12 @@ package com.example.demo;
 
 import com.example.demo.demos.mapper.UserTestMapper;
 import com.example.demo.demos.pojo.UserTest;
+import com.example.demo.demos.service.UserTestService;
 import com.example.thread.InsertTarget;
 import com.example.thread.InsertTargetRunnable;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 @SpringBootTest
+
 class DemoApplicationTests {
     @Resource
     private UserTestMapper userTestMapper;
@@ -22,11 +25,16 @@ class DemoApplicationTests {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    private UserTestService userTestService;
 
+    @Value("${spring.task.execution.pool.core-size}")
+    private String corePoolSize;
     @Test
     void contextLoads() {
-        List<UserTest> userTests = userTestMapper.selectList(null);
-        System.out.println(userTests.get(0).toString());
+//        List<UserTest> userTests = userTestMapper.selectList(null);
+//        System.out.println(userTests.get(0).toString());
+        System.out.println(corePoolSize);
     }
 
     @Test
@@ -36,21 +44,20 @@ class DemoApplicationTests {
     @Test
     void testInsert(){
         ArrayList<UserTest> allUser = new ArrayList(5000);
-
         //生成size个UserInfo
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 51; i++) {
             UserTest userInfo = new UserTest();
             userInfo.setName("test"+i);
             userInfo.setEmail("email"+i);
             userInfo.setAge(i);
             allUser.add(userInfo);
         }
-
-        long  startTime = System.currentTimeMillis();
-        for (int i = 0;i<5000;i++){
-            userTestMapper.insert(allUser.get(i));
-        }
-        System.out.println("单线程for循环插入5000耗时:"+(System.currentTimeMillis()-startTime));
+        userTestService.batchInsert(allUser);
+//        long  startTime = System.currentTimeMillis();
+//        for (int i = 0;i<5000;i++){
+//            userTestMapper.insert(allUser.get(i));
+//        }
+//        System.out.println("单线程for循环插入5000耗时:"+(System.currentTimeMillis()-startTime));
 
     }
     @Test
@@ -78,7 +85,6 @@ class DemoApplicationTests {
         }
         CountDownLatch countDownLatch = new CountDownLatch(downLanchSize);
         long startTime = System.currentTimeMillis();
-
         for (int i = 0; i < downLanchSize; i++) {
             //每个线程均分需要处理的数据
             List<List<UserTest>> partition = Lists.partition(allUser, dataPartionLength);
@@ -88,7 +94,6 @@ class DemoApplicationTests {
             FutureTask futureTask = new FutureTask(insertTarget);
             //执行任务
             executor.execute(futureTask);
-
         }
 
 
@@ -121,11 +126,16 @@ class DemoApplicationTests {
     }
     @Test
     void selectTest(){
-        List<UserTest> userTests = userTestMapper.selectUserTest();
-//        System.out.println(userTests.size());
-        userTests.forEach(userTest->{
-            System.out.println(userTest.getEmail());
-        });
+//        List<UserTest> userTests = userTestMapper.selectUserTest();
+//        userTests.forEach(userTest->{
+//            System.out.println(userTest.getEmail());
+//        });
+        UserTest userTest = new UserTest();
+        userTest.setAge(18);
+        userTest.setName("test");
+        userTest.setEmail("110@qq.com");
+        int insert = userTestMapper.insert(userTest);
+        System.out.println(insert);
     }
     @Test
     void ListTest(){
@@ -135,9 +145,9 @@ class DemoApplicationTests {
         list.add(3);
         list.add(4);
         list.add(5);
-        list.add(6);
-        List<List<Integer>> partition = Lists.partition(list, 2);
-        System.out.println(partition.get(2).get(1));
+
+        List<List<Integer>> partition = Lists.partition(list, 5/2);
+        System.out.println(partition.size());
     }
 
 }

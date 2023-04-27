@@ -1,33 +1,28 @@
-package com.example.thread;
+package com.example.demo.demos.other;
 
 import com.example.demo.demos.mapper.UserTestMapper;
 import com.example.demo.demos.pojo.UserTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
-public class InsertTarget implements Callable {
 
+public class BatchInsertUserTestThread implements Callable {
     private UserTestMapper userTestMapper;
-
-    private List<UserTest> userTestList;
     private CountDownLatch countDownLatch;
-
-    int rows=0;
-    public InsertTarget(List<UserTest> userTestList,CountDownLatch countDownLatch,UserTestMapper userTestMapper){
+    private List<UserTest> userTestList;
+    int rows;
+    public BatchInsertUserTestThread(UserTestMapper userTestMapper,CountDownLatch countDownLatch,List<UserTest> userTestList){
+        this.userTestMapper=userTestMapper;
         this.countDownLatch=countDownLatch;
         this.userTestList=userTestList;
-        this.userTestMapper=userTestMapper;
     }
-    public Integer call() throws Exception {
-        for (UserTest userTest : userTestList) {
+    @Override
+    public Object call() throws Exception {
+        userTestList.forEach(userTest -> {
             userTestMapper.insert(userTest);
             rows++;
-        }
-
+        });
         if (rows==userTestList.size()){
             countDownLatch.countDown();
         }
