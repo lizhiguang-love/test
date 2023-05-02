@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.demos.mapper.UserTestMapper;
 import com.example.demo.demos.pojo.UserTest;
 import com.example.demo.demos.service.UserTestService;
+import com.example.demo.demos.util.RedissonLock;
 import com.example.thread.InsertTarget;
 import com.example.thread.InsertTargetCallable;
 import com.example.thread.InsertTargetRunnable;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -34,8 +36,11 @@ class DemoApplicationTests {
     @Resource
     private Executor executor;
 
+    @Resource
+    private RedissonLock redissonLock;
     @Value("${spring.task.execution.pool.core-size}")
     private String corePoolSize;
+
     @Test
     void contextLoads() {
         List<UserTest> userTests = userTestMapper.selectList(null);
@@ -189,6 +194,28 @@ class DemoApplicationTests {
     }
     @Test
     void jedisTest(){
+        //模拟10个客户端
+        for (int i = 0; i < 10; i++) {
+            Thread thread = new Thread(new LockRunnable());
+            thread.start();
+        }
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private class LockRunnable implements Runnable{
 
+        @Override
+        public void run() {
+            redissonLock.addLock("demo");
+            try {
+                TimeUnit.SECONDS.sleep(11);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            redissonLock.releaseLock("demo");
+        }
     }
 }
