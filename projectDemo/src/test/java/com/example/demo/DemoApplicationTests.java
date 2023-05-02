@@ -183,6 +183,7 @@ class DemoApplicationTests {
     @Test
     void ListTest(){
         ArrayList<Integer> list = new ArrayList<Integer>();
+        ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<>();
         list.add(1);
         list.add(2);
         list.add(3);
