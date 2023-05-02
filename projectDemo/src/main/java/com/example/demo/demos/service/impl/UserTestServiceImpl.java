@@ -43,7 +43,6 @@ public class UserTestServiceImpl extends ServiceImpl<UserTestMapper,UserTest> im
                 FutureTask futureTask = new FutureTask(userTestThread);
                 executor.execute(futureTask);
             }
-
         }
 
 

@@ -24,8 +24,9 @@ public class InsertTarget implements Callable {
     }
     public Integer call() throws Exception {
         for (UserTest userTest : userTestList) {
+            System.out.println("userTest");
             userTestMapper.insert(userTest);
-            System.out.println(userTest);
+
             rows++;
         }
         System.out.println("累计--->"+rows);

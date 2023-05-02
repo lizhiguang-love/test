@@ -1,11 +1,14 @@
 package com.example.demo;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.demos.mapper.UserTestMapper;
 import com.example.demo.demos.pojo.UserTest;
 import com.example.demo.demos.service.UserTestService;
 import com.example.thread.InsertTarget;
+import com.example.thread.InsertTargetCallable;
 import com.example.thread.InsertTargetRunnable;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,8 +38,12 @@ class DemoApplicationTests {
     private String corePoolSize;
     @Test
     void contextLoads() {
-//        List<UserTest> userTests = userTestMapper.selectList(null);
-//        System.out.println(userTests.get(0).toString());
+        List<UserTest> userTests = userTestMapper.selectList(null);
+        userTests.forEach(userTest -> {
+            userTest.getAge();
+            System.out.println(userTest.getAge());
+        });
+
         System.out.println(corePoolSize);
     }
 
@@ -90,12 +97,19 @@ class DemoApplicationTests {
         for (int i = 0; i < downLanchSize; i++) {
             //每个线程均分需要处理的数据
             List<List<UserTest>> partition = Lists.partition(allUser, 100);
+            List<UserTest> userTests = partition.get(i);
             //调用实现了Callable的InsertTarget类，将countDownLatch,partion传进去
-            InsertTarget insertTarget = new InsertTarget(partition.get(i),countDownLatch,userTestMapper);
-
-            FutureTask futureTask = new FutureTask(insertTarget);
-            //执行任务
-            executor.execute(futureTask);
+//            InsertTarget insertTarget = new InsertTarget(partition.get(i),countDownLatch,userTestMapper);
+            CompletableFuture.runAsync(()->{
+                try {
+                    new InsertTarget(userTests,countDownLatch,userTestMapper).call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            },executor);
+//            FutureTask futureTask = new FutureTask(insertTarget);
+//            //执行任务
+//            executor.execute(futureTask);
         }
 
 
@@ -112,15 +126,36 @@ class DemoApplicationTests {
     }
     @Test
     void CompleteFutureTest(){
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(50, 50, 1, TimeUnit.HOURS, new LinkedBlockingQueue());
-//        CompletableFuture<Void> future = CompletableFuture.runAsync(new InsertTargetRunnable(), executor);
-        CompletableFuture<String> future1 = CompletableFuture.supplyAsync(() -> {
-            executor.execute(new InsertTargetRunnable());
-            return "hello";
-        });
-
+        CompletableFuture<String> uCompletableFuture = CompletableFuture.supplyAsync(()->{
+            new InsertTargetRunnable().run();
+            System.out.println("呵呵");
+            return "world";
+        }, executor);
         try {
-            System.out.println(future1.get());
+            System.out.println(uCompletableFuture.get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    void completeableFutureTest(){
+//        CompletableFuture.runAsync(new InsertTargetRunnable(), executor);
+        CompletableFuture<List<UserTest>> userTestList1 = CompletableFuture.supplyAsync(() -> {
+            QueryWrapper<UserTest> queryWrapper = new QueryWrapper<>();
+            queryWrapper.le("age", 10);
+            List<UserTest> userTests = userTestMapper.selectList(queryWrapper);
+            return userTests;
+        }, executor);
+        CompletableFuture<List<UserTest>> userTestList2 = CompletableFuture.supplyAsync(() -> {
+            QueryWrapper<UserTest> queryWrapper = new QueryWrapper<>();
+            queryWrapper.gt("age", 10);
+            List<UserTest> userTests = userTestMapper.selectList(queryWrapper);
+            return userTests;
+        }, executor);
+        try {
+            System.out.println(userTestList1.get().get(0));
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -152,5 +187,8 @@ class DemoApplicationTests {
         List<List<Integer>> partition = Lists.partition(list, 5/2);
         System.out.println(partition.size());
     }
+    @Test
+    void jedisTest(){
 
+    }
 }
