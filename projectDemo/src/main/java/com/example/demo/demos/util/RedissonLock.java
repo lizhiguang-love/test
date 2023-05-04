@@ -2,7 +2,6 @@ package com.example.demo.demos.util;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -24,6 +23,7 @@ public class RedissonLock {
                 System.out.println("redisson client is null");
                 return false;
             }
+
             RLock lock = redissonClient.getLock(lockey);
             //设置锁超时时间为10s，到期自动释放
 //            lock.lock(10, TimeUnit.SECONDS);

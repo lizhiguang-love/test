@@ -16,9 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.concurrent.*;
 
 @SpringBootTest
@@ -184,14 +184,21 @@ class DemoApplicationTests {
     void ListTest(){
         ArrayList<Integer> list = new ArrayList<Integer>();
         ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<>();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-
-        List<List<Integer>> partition = Lists.partition(list, 5/2);
-        System.out.println(partition.size());
+        HashMap<String, String> map = new HashMap<>();
+        concurrentHashMap.put("test","123");
+        Set<Map.Entry<String, String>> entrySet = concurrentHashMap.entrySet();
+        Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
+        while (iterator.hasNext()){
+            System.out.println(iterator.next().getValue());
+        }
+//        list.add(1);
+//        list.add(2);
+//        list.add(3);
+//        list.add(4);
+//        list.add(5);
+//
+//        List<List<Integer>> partition = Lists.partition(list, 5/2);
+//        System.out.println(partition.size());
     }
     @Test
     void jedisTest(){
@@ -218,5 +225,56 @@ class DemoApplicationTests {
             }
             redissonLock.releaseLock("demo");
         }
+    }
+    @Test
+    void arrayTest(){
+        int[] num={7,4,1,3,5};
+        int temp;
+        for (int i = 0; i < num.length; i++) {
+            for (int j=0;j<num.length-1;j++){
+                if (num[j]>num[j+1]){
+                    temp=num[j];
+                    num[j]=num[j+1];
+                    num[j+1]=temp;
+                }
+            }
+        }
+        for (int i = 0; i < num.length; i++) {
+            System.out.println(num[i]);
+        }
+    }
+    @Test
+    void ioTest(){
+        String str="D:\\ioTest.txt";
+        FileInputStream fileInputStream=null;
+        InputStreamReader reader=null;
+        try {
+             fileInputStream = new FileInputStream(str);
+             reader = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+            char[] chars=new char[1];
+            int readLine;
+            while ((readLine = bufferedInputStream.read()) != -1){
+                System.out.println(readLine);
+            }
+//            while ((readLine = reader.read(chars)) != -1) {
+//                System.out.print(new String(chars,0,readLine)+" ");
+//            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (reader != null){//避免空指针异常
+                try {
+                    fileInputStream.close();
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    @Test
+    void basicTest(){
+        System.out.println('a'+1);
     }
 }
