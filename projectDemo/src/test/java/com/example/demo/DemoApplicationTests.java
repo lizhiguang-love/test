@@ -275,6 +275,7 @@ class DemoApplicationTests {
     }
     @Test
     void basicTest(){
-        System.out.println('a'+1);
+        Father father=new Son();
+        father.tes();
     }
 }
