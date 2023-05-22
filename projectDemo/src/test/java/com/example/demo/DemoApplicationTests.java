@@ -275,7 +275,6 @@ class DemoApplicationTests {
     }
     @Test
     void basicTest(){
-        Father father=new Son();
-        father.tes();
+
     }
 }
