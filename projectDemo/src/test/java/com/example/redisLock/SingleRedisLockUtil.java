@@ -28,6 +28,7 @@ public class SingleRedisLockUtil {
 
         try {
             for (;;){
+
                 String lockResult = jedis.set(lockkey, requestId, setParams);
                 if ("OK".equals(lockResult)){
                     System.out.println(threadName+"获取锁成功");

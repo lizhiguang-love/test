@@ -1,6 +1,9 @@
 package com.example.redisLock;
 
 
+import org.springframework.data.redis.core.StringRedisTemplate;
+
+import javax.annotation.Resource;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -11,6 +14,7 @@ public class RedisLocalTest {
         for (int i=0;i<5;i++) {
             Thread thread = new Thread(new LockRunnable());
             thread.start();
+
         }
 
     }
@@ -29,6 +33,7 @@ public class RedisLocalTest {
                 }
             }
             redisLockUtil.releaseLock("lock",uuid);
+
         }
     }
 }

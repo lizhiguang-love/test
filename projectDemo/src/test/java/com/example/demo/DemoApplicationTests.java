@@ -5,6 +5,7 @@ import com.example.demo.demos.mapper.UserTestMapper;
 import com.example.demo.demos.pojo.UserTest;
 import com.example.demo.demos.service.UserTestService;
 import com.example.demo.demos.util.RedissonLock;
+import com.example.redisLock.RedisLockDemo;
 import com.example.thread.InsertTarget;
 import com.example.thread.InsertTargetCallable;
 import com.example.thread.InsertTargetRunnable;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -37,6 +39,9 @@ class DemoApplicationTests {
     private Executor executor;
 
     @Resource
+    private Jedis jedis;
+
+    @Resource
     private RedissonLock redissonLock;
     @Value("${spring.task.execution.pool.core-size}")
     private String corePoolSize;
@@ -54,8 +59,25 @@ class DemoApplicationTests {
 
     @Test
     void redisTest(){
-        System.out.println(stringRedisTemplate.opsForValue().get("test"));
+//        模拟多个5个客户端
+//        for (int i=0;i<5;i++) {
+//            Thread thread = new Thread(new LockRunnable());
+//            thread.start();
+//        }
+        jedis.set("qqq","aaa");
+        System.out.println(jedis.get("qqq"));
+        stringRedisTemplate.opsForValue().set("hello","world");
+        System.out.println(stringRedisTemplate.opsForValue().get("hello"));
+//        String uuid = UUID.randomUUID().toString();
+//        Boolean result = stringRedisTemplate.opsForValue().setIfAbsent("uuid", uuid,10,TimeUnit.SECONDS);
+//        RedisLockDemo redisLockDemo = new RedisLockDemo(stringRedisTemplate,jedis);
+//        redisLockDemo.test();
+        //        System.out.println(result);
+//        stringRedisTemplate.opsForValue().set("hello","world",5,TimeUnit.SECONDS);
+
+//        System.out.println(stringRedisTemplate.opsForValue().get("hello"));
     }
+
     @Test
     void testInsert(){
         ArrayList<UserTest> allUser = new ArrayList(5000);
@@ -203,27 +225,21 @@ class DemoApplicationTests {
     @Test
     void jedisTest(){
         //模拟10个客户端
-        for (int i = 0; i < 10; i++) {
-            Thread thread = new Thread(new LockRunnable());
-            thread.start();
-        }
-        try {
-            System.in.read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String projectPath = System.getProperty("user.dir");
+        System.out.println(projectPath);
+
     }
     private class LockRunnable implements Runnable{
 
         @Override
         public void run() {
-            redissonLock.addLock("demo");
-            try {
-                TimeUnit.SECONDS.sleep(11);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            redissonLock.releaseLock("demo");
+
+                System.out.println("进来了");
+                String uuid = UUID.randomUUID().toString();
+                jedis.set("tes","test");
+                System.out.println(jedis.get("tes"));
+
+
         }
     }
     @Test
@@ -275,6 +291,7 @@ class DemoApplicationTests {
     }
     @Test
     void basicTest(){
-
+        String str = UUID.randomUUID().toString();
+        System.out.println(str);
     }
 }

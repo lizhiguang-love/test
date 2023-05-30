@@ -25,6 +25,7 @@ public class RedissonLock {
             }
 
             RLock lock = redissonClient.getLock(lockey);
+
             //设置锁超时时间为10s，到期自动释放
 //            lock.lock(10, TimeUnit.SECONDS);
             //获取锁的等待时间
