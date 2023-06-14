@@ -1,4 +1,4 @@
-package com.example.demo.demos.config;
+package com.example.demo.lzg.config;
 
 import org.redisson.Redisson;
 import org.redisson.RedissonRedLock;

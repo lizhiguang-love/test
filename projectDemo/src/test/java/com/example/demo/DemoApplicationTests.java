@@ -1,16 +1,13 @@
 package com.example.demo;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.demo.demos.mapper.UserTestMapper;
-import com.example.demo.demos.pojo.UserTest;
-import com.example.demo.demos.service.UserTestService;
-import com.example.demo.demos.util.RedissonLock;
-import com.example.redisLock.RedisLockDemo;
+import com.example.demo.lzg.mapper.UserTestMapper;
+import com.example.demo.lzg.pojo.UserTest;
+import com.example.demo.lzg.service.UserTestService;
+import com.example.demo.lzg.util.RedissonLock;
 import com.example.thread.InsertTarget;
-import com.example.thread.InsertTargetCallable;
 import com.example.thread.InsertTargetRunnable;
 import com.google.common.collect.Lists;
-import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,22 +77,11 @@ class DemoApplicationTests {
 
     @Test
     void testInsert(){
-        ArrayList<UserTest> allUser = new ArrayList(5000);
-        //生成size个UserInfo
-        for (int i = 0; i < 20; i++) {
-            UserTest userInfo = new UserTest();
-            userInfo.setName("test"+i);
-            userInfo.setEmail("email"+i);
-            userInfo.setAge(i);
-            allUser.add(userInfo);
-        }
-        userTestService.batchInsert(allUser);
-//        long  startTime = System.currentTimeMillis();
-//        for (int i = 0;i<5000;i++){
-//            userTestMapper.insert(allUser.get(i));
-//        }
-//        System.out.println("单线程for循环插入5000耗时:"+(System.currentTimeMillis()-startTime));
-
+        UserTest userTest = new UserTest();
+        userTest.setAge(50);
+        userTest.setEmail("110");
+        userTest.setName("小帅");
+        userTestService.save(userTest);
     }
     @Test
     void BatchInsert(){
@@ -291,7 +277,9 @@ class DemoApplicationTests {
     }
     @Test
     void basicTest(){
-        String str = UUID.randomUUID().toString();
-        System.out.println(str);
+        String str="abc";
+        System.out.println(str.getClass());
+        str="def";
+        System.out.println(str.getClass());
     }
 }

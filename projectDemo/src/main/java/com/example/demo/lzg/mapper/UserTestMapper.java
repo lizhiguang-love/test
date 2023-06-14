@@ -1,9 +1,8 @@
-package com.example.demo.demos.mapper;
+package com.example.demo.lzg.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.demo.demos.pojo.UserTest;
+import com.example.demo.lzg.pojo.UserTest;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 

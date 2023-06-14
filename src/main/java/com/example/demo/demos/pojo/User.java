@@ -1,4 +1,4 @@
-package com.example.demo.demos.pojo;
+package com.example.demo.lzg.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.Version;

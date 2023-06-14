@@ -1,11 +1,8 @@
 package com.example.thread;
 
-import com.example.demo.demos.mapper.UserTestMapper;
-import com.example.demo.demos.pojo.UserTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
+import com.example.demo.lzg.mapper.UserTestMapper;
+import com.example.demo.lzg.pojo.UserTest;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;

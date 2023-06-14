@@ -1,6 +1,6 @@
-package com.example.demo.demos.service;
+package com.example.demo.lzg.service;
 
-import com.example.demo.demos.pojo.User;
+import com.example.demo.lzg.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.demo.demos.controller;
+package com.example.demo.lzg.controller;
 
 
 import org.springframework.web.bind.annotation.RequestMapping;

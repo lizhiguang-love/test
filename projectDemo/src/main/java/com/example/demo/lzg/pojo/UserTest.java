@@ -1,4 +1,4 @@
-package com.example.demo.demos.pojo;
+package com.example.demo.lzg.pojo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName(value = "userTest")
+@TableName(value = "userLzg")
 public class UserTest {
     @TableId(type = IdType.ASSIGN_UUID)
     private String id;

@@ -1,11 +1,10 @@
-package com.example.demo.demos.other;
+package com.example.demo.lzg.other;
 
-import com.example.demo.demos.mapper.UserTestMapper;
-import com.example.demo.demos.pojo.UserTest;
+import com.example.demo.lzg.mapper.UserTestMapper;
+import com.example.demo.lzg.pojo.UserTest;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
 
 public class BatchInsertUserTestThread implements Callable {
     private UserTestMapper userTestMapper;

@@ -1,7 +1,7 @@
-package com.example.demo.demos.service;
+package com.example.demo.lzg.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.demos.pojo.UserTest;
+import com.example.demo.lzg.pojo.UserTest;
 
 import java.util.List;
 

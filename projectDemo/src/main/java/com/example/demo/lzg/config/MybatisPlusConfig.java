@@ -1,4 +1,4 @@
-package com.example.demo.demos.config;
+package com.example.demo.lzg.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.example.demo.demos.mapper")
+@MapperScan("com.example.demo.lzg.mapper")
 public class MybatisPlusConfig {
 
     @Bean

@@ -1,6 +1,6 @@
-package com.example.demo.demos.mapper;
+package com.example.demo.lzg.mapper;
 
-import com.example.demo.demos.pojo.User;
+import com.example.demo.lzg.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

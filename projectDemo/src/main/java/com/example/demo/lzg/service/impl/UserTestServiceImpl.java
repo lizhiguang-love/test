@@ -1,17 +1,16 @@
-package com.example.demo.demos.service.impl;
+package com.example.demo.lzg.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.demo.demos.mapper.UserTestMapper;
-import com.example.demo.demos.other.BatchInsertUserTestThread;
-import com.example.demo.demos.pojo.UserTest;
-import com.example.demo.demos.service.UserTestService;
+import com.example.demo.lzg.mapper.UserTestMapper;
+import com.example.demo.lzg.other.BatchInsertUserTestThread;
+import com.example.demo.lzg.pojo.UserTest;
+import com.example.demo.lzg.service.UserTestService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 

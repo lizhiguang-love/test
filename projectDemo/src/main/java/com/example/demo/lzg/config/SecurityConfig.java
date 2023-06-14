@@ -1,4 +1,4 @@
-package com.example.demo.demos.config;
+package com.example.demo.lzg.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

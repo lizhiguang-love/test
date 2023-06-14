@@ -1,8 +1,8 @@
-package com.example.demo.demos.service.impl;
+package com.example.demo.lzg.service.impl;
 
-import com.example.demo.demos.pojo.User;
-import com.example.demo.demos.mapper.UserMapper;
-import com.example.demo.demos.service.UserService;
+import com.example.demo.lzg.pojo.User;
+import com.example.demo.lzg.mapper.UserMapper;
+import com.example.demo.lzg.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

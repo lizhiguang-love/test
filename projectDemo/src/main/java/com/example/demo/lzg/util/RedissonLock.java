@@ -1,4 +1,4 @@
-package com.example.demo.demos.util;
+package com.example.demo.lzg.util;
 
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
