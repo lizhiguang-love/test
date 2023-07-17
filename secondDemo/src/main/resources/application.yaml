@@ -1,0 +1,13 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@10.4.3.169:1521/blmgprd
+    username: loan_admin
+    password: lipsadmin
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.example.demo.lzg.pojo
