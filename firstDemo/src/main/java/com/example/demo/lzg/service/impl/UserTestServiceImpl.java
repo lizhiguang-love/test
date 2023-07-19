@@ -1,5 +1,7 @@
 package com.example.demo.lzg.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.lzg.mapper.UserTestMapper;
 import com.example.demo.lzg.other.BatchInsertUserTestThread;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 
@@ -31,6 +34,12 @@ public class UserTestServiceImpl extends ServiceImpl<UserTestMapper,UserTest> im
         BatchInsertUserTestThread userTestThread=null;
         //当数据量小于核心线程数时
         if (userTestList.size()<Integer.valueOf(corePoolSize)){
+            for (UserTest userTest : userTestList) {
+                CompletableFuture.runAsync(()->{
+                    baseMapper.insert(userTest);
+                });
+            }
+
             userTestThread = new BatchInsertUserTestThread(userTestMapper,userTestList);
             FutureTask futureTask = new FutureTask(userTestThread);
             executor.execute(futureTask);
@@ -45,5 +54,12 @@ public class UserTestServiceImpl extends ServiceImpl<UserTestMapper,UserTest> im
         }
 
 
+    }
+
+    @Override
+    public IPage<UserTest> queryUser() {
+        Page<UserTest> page = new Page<>(1, 2);
+        Page<UserTest> userTestPage = baseMapper.selectPage(page, null);
+        return userTestPage;
     }
 }

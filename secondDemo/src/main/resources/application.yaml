@@ -7,6 +7,11 @@ spring:
     url: jdbc:oracle:thin:@10.4.3.169:1521/blmgprd
     username: loan_admin
     password: lipsadmin
+  rabbitmq:
+    username: root
+    password: root
+    host: 192.168.119.128
+    port: 5672
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
