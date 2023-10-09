@@ -1,5 +1,6 @@
 package com.example.demo.lzg.config;
 
+import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -30,5 +31,10 @@ public class DirectRabbitMQConfig {
     @Bean
     public Binding binding(){
         return BindingBuilder.bind(testDirectQueue()).to(directExchange()).with("testDirectRouting");
+    }
+    @Bean
+    public ConnectionFactory connectionFactory(){
+
+        return new ConnectionFactory();
     }
 }

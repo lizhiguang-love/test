@@ -10,4 +10,6 @@ public interface UserTestService extends IService<UserTest> {
     void batchInsert(List<UserTest> userTestList);
 
     IPage<UserTest> queryUser();
+
+    void sendDirectMessage();
 }

@@ -1,0 +1,43 @@
+package com.example.socket;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class SocketServer {
+    public static void main(String[] args) {
+
+        try {
+            //创建SocketServer对象，指定监听的端口号
+            ServerSocket serverSocket = new ServerSocket(12345);
+            System.out.println("等待客户端连接。。。。。");
+            //监听客户端的连接请求
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("客户端已连接。。。。");
+            //获取输入流和输出流，输入流和输出流是捅过socket对象来进行数据传输的
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+            String message;
+            while (true){
+                //读取客户端发送的信息
+                message=bufferedReader.readLine();
+                if (message.equalsIgnoreCase("exit")){
+                    //如果接收到终止标志，退出循环
+                    break;
+                }
+                System.out.println("收到客户端消息："+message);
+                int i=1/0;
+                //发送响应给客户端
+                printWriter.println("已收到你的消息："+message);
+            }
+            //关闭连接
+            clientSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

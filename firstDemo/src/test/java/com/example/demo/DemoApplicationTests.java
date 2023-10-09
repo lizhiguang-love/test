@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.lzg.mapper.UserTestMapper;
 import com.example.demo.lzg.pojo.UserTest;
@@ -9,8 +10,11 @@ import com.example.thread.InsertTarget;
 import com.example.thread.InsertTargetRunnable;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import redis.clients.jedis.Jedis;
 
@@ -39,7 +43,8 @@ class DemoApplicationTests {
     private Jedis jedis;
 
     @Resource
-    private RedissonLock redissonLock;
+    private RedisTemplate redisTemplate;
+
     @Value("${spring.task.execution.pool.core-size}")
     private String corePoolSize;
 
@@ -64,6 +69,7 @@ class DemoApplicationTests {
         jedis.set("qqq","aaa");
         System.out.println(jedis.get("qqq"));
         stringRedisTemplate.opsForValue().set("hello","world");
+        jedis.rpush("key1","value1","value2");
         System.out.println(stringRedisTemplate.opsForValue().get("hello"));
 //        String uuid = UUID.randomUUID().toString();
 //        Boolean result = stringRedisTemplate.opsForValue().setIfAbsent("uuid", uuid,10,TimeUnit.SECONDS);
@@ -276,10 +282,26 @@ class DemoApplicationTests {
         }
     }
     @Test
-    void basicTest(){
-        String str="abc";
-        System.out.println(str.getClass());
-        str="def";
-        System.out.println(str.getClass());
+    void redisListCommandTest(){
+        ArrayList<String> studentList = new ArrayList<>();
+        studentList.add("xiaohong");
+        studentList.add("xiaoming");
+        studentList.add("jack");
+        for (int i = 0; i < studentList.size(); i++) {
+            stringRedisTemplate.opsForList().rightPush("student", JSON.toJSONString(studentList.get(i)));
+        }
+        List<String> student = stringRedisTemplate.opsForList().range("student", 0, -1);
+        for (int i = 0; i < student.size(); i++) {
+            System.out.println(student.get(i));
+        }
+    }
+    @Test
+    void redisStringCommandTest(){
+        stringRedisTemplate.opsForValue().set("test","jackson");
+        String test = stringRedisTemplate.opsForValue().get("test");
+        System.out.println(test);
+        stringRedisTemplate.delete("test");
+        String testResult = stringRedisTemplate.opsForValue().get("test");
+        System.out.println(testResult);
     }
 }

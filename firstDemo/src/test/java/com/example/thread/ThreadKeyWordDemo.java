@@ -10,15 +10,21 @@ public class ThreadKeyWordDemo {
     private static  int num=1;
     @Test
     void threadLocalTest(){
-        new Thread(()->{
-            threadLocal.set("本地变量1");
-            print("thread1");
 
-        }).start();
-        new Thread(()->{
-            threadLocal.set("本地变量2");
-            print("thread2");
-        }).start();
+        try {
+            new Thread(()->{
+                threadLocal.set("本地变量1");
+                print("thread1");
+
+            }).start();
+            new Thread(()->{
+                threadLocal.set("本地变量2");
+                print("thread2");
+            }).start();
+        } finally {
+            threadLocal.remove();
+        }
+
     }
     public static void print(String str){
         System.out.println(str+":"+threadLocal.get());
