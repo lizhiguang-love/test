@@ -1,17 +1,23 @@
 package com.example.thread;
 
+import java.util.concurrent.TimeUnit;
+
 public class SynchronizedDemo {
     public static void main(String[] args) {
         Phone p1 = new Phone();
         Phone p2 = new Phone();
         new Thread(()->{
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             p1.sendEmail();
         }).start();
 
 
-
         new Thread(()->{
-            p2.sendMessage();
+            p1.sendMessage();
         }).start();
 
     }
@@ -28,9 +34,8 @@ class Phone{
 
     }
 
-      synchronized void sendMessage(){
+    synchronized void sendMessage(){
         System.out.println("send message....");
         System.out.println(Thread.currentThread().getName()+"--->"+"线程111");
-
      }
 }

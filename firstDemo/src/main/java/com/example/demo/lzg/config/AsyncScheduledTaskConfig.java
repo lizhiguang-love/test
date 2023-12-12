@@ -17,6 +17,7 @@ public class AsyncScheduledTaskConfig {
     @Bean
     public Executor customAsyncThreadPool(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
         //最大线程数
         executor.setMaxPoolSize(Integer.valueOf(maxPoolSize));
         //核心线程数

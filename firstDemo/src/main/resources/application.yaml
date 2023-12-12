@@ -1,6 +1,31 @@
+server:
+  port: 7000
 spring:
   rabbitmq:
     host: 192.168.119.128
     port: 5672
     username: root
     password: root
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@10.4.3.169:1521/blmgprd
+    username: loan_admin
+    password: lipsadmin
+  redis:
+    host: 192.168.119.128
+    port: 6379
+    jedis:
+      pool:
+        max-active: 500
+        max-idle: 1000
+  task:
+    execution:
+      pool:
+        core-size: 50
+        max-size: 100
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.example.demo.lzg.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

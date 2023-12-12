@@ -304,4 +304,9 @@ class DemoApplicationTests {
         String testResult = stringRedisTemplate.opsForValue().get("test");
         System.out.println(testResult);
     }
+    @Test
+    void byteTest(){
+
+        System.out.println(9000 * 1/4);
+    }
 }

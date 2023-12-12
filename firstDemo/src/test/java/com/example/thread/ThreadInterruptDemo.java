@@ -1,11 +1,16 @@
 package com.example.thread;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class ThreadInterruptDemo {
     static volatile boolean flag=true;
     public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        executorService.submit(() -> {
 
+        });
         Thread t1 = new Thread(() -> {
             while (flag){
                 System.out.println("正在执行");
